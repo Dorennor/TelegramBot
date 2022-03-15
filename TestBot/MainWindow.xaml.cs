@@ -35,8 +35,7 @@ namespace TestBot
 
             var me = await botClient.GetMeAsync();
 
-            Console.WriteLine($"Start listening for @{me.Username}");
-            Console.ReadLine();
+            MessageBox.Show($"Start listening for @{me.Username}", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
