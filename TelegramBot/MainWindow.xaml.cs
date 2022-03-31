@@ -25,7 +25,9 @@ namespace TelegramBot
         public MainWindow()
         {
             InitializeComponent();
-            TextBox.Text = "Disabled";
+            RunButton.IsEnabled = true;
+            StopButton.IsEnabled = false;
+            StateLabel.Content = "Disabled";
             botClient = new TelegramBotClient("5262349068:AAHNdyvZ2Hjji7nScbyq9V-c79w39FcTuC4");
             source = new CancellationTokenSource();
             token = source.Token;
@@ -35,7 +37,9 @@ namespace TelegramBot
 
         private async void RunButton_OnClick(object sender, RoutedEventArgs e)
         {
-            TextBox.Text = "Enabled";
+            StateLabel.Content = "Enabled";
+            RunButton.IsEnabled = false;
+            StopButton.IsEnabled = true;
 
             var receiverOptions = new ReceiverOptions
             {
@@ -49,14 +53,21 @@ namespace TelegramBot
             Debug.WriteLine($"Start listening for @{me.Username}");
         }
 
-        private void StopButton_OnClick(object sender, RoutedEventArgs e)
+        private async void StopButton_OnClick(object sender, RoutedEventArgs e)
         {
-            TextBox.Text = "Disabled";
+            StateLabel.Content = "Disabled";
+            RunButton.IsEnabled = true;
+            StopButton.IsEnabled = false;
+
             source.Cancel();
             source.Dispose();
 
             source = new CancellationTokenSource();
             token = source.Token;
+
+            var me = await botClient.GetMeAsync();
+
+            Debug.WriteLine($"Stop listening for @{me.Username}");
         }
 
         private async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)

@@ -6,6 +6,6 @@
     <StackPanel>
         <Button Name="RunButton" Content="Run" Click="RunButton_OnClick" Width="50" Background="WhiteSmoke" BorderBrush="Black" BorderThickness="1" FontFamily="Segoe UI" FontSize="18" FontStyle="Normal" Margin="5"></Button>
         <Button Name="StopButton" Content="Stop" Click="StopButton_OnClick" Width="50" Background="WhiteSmoke" BorderBrush="Black" BorderThickness="1" FontFamily="Segoe UI" FontSize="18" FontStyle="Normal" Margin="5"></Button>
-        <TextBox Name="TextBox" IsEnabled="False" HorizontalContentAlignment="Center" Width="100" Background="WhiteSmoke" BorderBrush="Black" BorderThickness="1" FontFamily="Segoe UI" FontSize="18" FontStyle="Normal" Margin="5"></TextBox>
+        <Label Name="StateLabel" HorizontalContentAlignment="Center" Width="100" Background="WhiteSmoke" BorderBrush="Black" BorderThickness="1" FontFamily="Segoe UI" FontSize="18" FontStyle="Normal" Margin="5"></Label>
     </StackPanel>
 </Window>
