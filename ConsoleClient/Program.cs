@@ -4,7 +4,7 @@ using Telegram.Bot.Extensions.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
-var botClient = new TelegramBotClient("5262349068:AAHPDBCb-eNQJr-Q6CRVUdfkSzg3KNtlH4s");
+var botClient = new TelegramBotClient("5262349068:AAHNdyvZ2Hjji7nScbyq9V-c79w39FcTuC4");
 
 using var cts = new CancellationTokenSource();
 
