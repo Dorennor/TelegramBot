@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -65,14 +66,10 @@ namespace TelegramBot
 
             Debug.WriteLine($"Received a '{update.Message.Text}' message in chat {update.Message.Chat.Id}.");
 
-            try
+            if (!IsExist(update.Message.Chat.Id))
             {
                 await _context.Chats.AddAsync(new Chat(update.Message.Chat.Id, update.Message.Chat.Username, update.Message.Chat.FirstName, update.Message.Chat.LastName));
                 await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException e)
-            {
-                Debug.WriteLine(e);
             }
 
             await botClient.SendTextMessageAsync(update.Message.Chat.Id, $"ChatID: {update.Message.Chat.Id}\nUsername: {update.Message.Chat.Username}\nFirstName: {update.Message.Chat.FirstName}\nLastName: {update.Message.Chat.LastName}", cancellationToken: cancellationToken);
@@ -89,6 +86,12 @@ namespace TelegramBot
 
             Debug.WriteLine(ErrorMessage);
             return Task.CompletedTask;
+        }
+
+        private bool IsExist(long ChatId)
+        {
+            var temp = _context.Chats.FirstOrDefault(c => c.ChatId == ChatId);
+            return temp != null;
         }
     }
 }
