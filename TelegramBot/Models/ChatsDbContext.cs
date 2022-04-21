@@ -4,7 +4,7 @@ namespace TelegramBot.Models;
 
 public class ChatsDbContext : DbContext
 {
-    private readonly string _connectionString = "Server=VLADIMIRPC;Database=ChatDb;Trusted_Connection=True";
+    private readonly string _connectionString = @"Server=VLADIMIRPC;Database=ChatDb;Trusted_Connection=True";
     public DbSet<Chat> Chats { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

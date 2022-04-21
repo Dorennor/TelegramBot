@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Win32;
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,12 +14,13 @@ using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using TelegramBot.Models;
 using Chat = TelegramBot.Models.Chat;
+using File = System.IO.File;
 
 namespace TelegramBot
 {
     public partial class MainWindow : Window
     {
-        private TelegramBotClient botClient;
+        private static TelegramBotClient botClient;
         private CancellationTokenSource source;
         private CancellationToken token;
         private ChatsDbContext _context;
@@ -25,13 +28,17 @@ namespace TelegramBot
         public MainWindow()
         {
             InitializeComponent();
+
             RunButton.IsEnabled = true;
             StopButton.IsEnabled = false;
             StateLabel.Content = "Disabled";
-            botClient = new TelegramBotClient("5262349068:AAHNdyvZ2Hjji7nScbyq9V-c79w39FcTuC4");
+
+            botClient = new TelegramBotClient(@"5262349068:AAHNdyvZ2Hjji7nScbyq9V-c79w39FcTuC4");
             source = new CancellationTokenSource();
             token = source.Token;
+
             _context = new ChatsDbContext();
+            _context.Database.Migrate();
             _context.Chats.Load();
         }
 
@@ -73,7 +80,18 @@ namespace TelegramBot
         private async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
         {
             if (update.Type != UpdateType.Message) return;
-            if (update.Message!.Type != MessageType.Text) return;
+            if (update.Message!.Type != MessageType.Text && update.Message!.Type != MessageType.Audio) return;
+
+            var file = botClient.GetFileAsync(update.Message.Audio.FileId);
+            var fileName = file.Result.FileId + "." + file.Result.FilePath.Split('.').Last();
+
+            using (var saveAudioStream = File.Open(fileName, FileMode.Create))
+            {
+                MessageBox.Show(file.Result.FilePath);
+                await botClient.DownloadFileAsync(file.Result.FilePath, saveAudioStream);
+                Thread.Sleep(360);
+            }
+            await botClient.SendTextMessageAsync(update.Message.Chat.Id, "Audio save");
 
             Debug.WriteLine($"Received a '{update.Message.Text}' message in chat {update.Message.Chat.Id}.");
 
@@ -83,7 +101,7 @@ namespace TelegramBot
                 await _context.SaveChangesAsync();
             }
 
-            await botClient.SendTextMessageAsync(update.Message.Chat.Id, $"ChatID: {update.Message.Chat.Id}\nUsername: {update.Message.Chat.Username}\nFirstName: {update.Message.Chat.FirstName}\nLastName: {update.Message.Chat.LastName}", cancellationToken: cancellationToken);
+            //await botClient.SendTextMessageAsync(update.Message.Chat.Id, $"ChatID: {update.Message.Chat.Id}\nUsername: {update.Message.Chat.Username}\nFirstName: {update.Message.Chat.FirstName}\nLastName: {update.Message.Chat.LastName}", cancellationToken: cancellationToken);
         }
 
         private Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
@@ -103,6 +121,28 @@ namespace TelegramBot
         {
             var temp = _context.Chats.FirstOrDefault(c => c.ChatId == ChatId);
             return temp != null;
+        }
+
+
+        private async void SendMessageButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            var cancelationToken = new CancellationTokenSource().Token;
+            for (int i = 1; i < 11; i++)
+            {
+                await botClient.SendTextMessageAsync(1022035656, $"Слава, отсоси {i} хуёв!", cancellationToken: cancelationToken);
+                Thread.Sleep(60);
+            }
+        }
+
+        private void OpenFileButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            if (openFileDialog.ShowDialog() == false) return;
+
+            var tfile = TagLib.File.Create(openFileDialog.FileName);
+            string title = tfile.Tag.Title;
+            TimeSpan duration = tfile.Properties.Duration;
+            Debug.WriteLine($"Title: {title}, duration: {duration}");
         }
     }
 }
