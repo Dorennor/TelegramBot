@@ -1,5 +1,5 @@
 ﻿namespace DesktopApp.MVVM.ViewModel;
 
-public class DiscoveryViewModel
+public class StatisticsViewModel
 {
 }

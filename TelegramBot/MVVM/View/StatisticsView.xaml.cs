@@ -2,9 +2,9 @@
 
 namespace DesktopApp.MVVM.View;
 
-public partial class DiscoveryView : UserControl
+public partial class StatisticsView : UserControl
 {
-    public DiscoveryView()
+    public StatisticsView()
     {
         InitializeComponent();
     }

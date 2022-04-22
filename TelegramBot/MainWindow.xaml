@@ -111,7 +111,8 @@
                             FontSize="16"
                             Foreground="White"
                             FontWeight="Bold"
-                            Margin="0,0,5,0" />
+                            Margin="0,0,5,0">
+                    </Button>
 
                     <Button Name="Exit"
                             Content="x"
@@ -137,18 +138,23 @@
                              Style="{StaticResource MenuButtonTheme}"
                              IsChecked="True"
                              Command="{Binding HomeViewCommand}"></RadioButton>
-                <RadioButton Content="Discovery"
+                <RadioButton Content="Statistics"
                              Height="50"
                              Foreground="White"
                              FontSize="14"
                              Style="{StaticResource MenuButtonTheme}"
-                             Command="{Binding DiscoveryViewCommand}"></RadioButton>
-                <RadioButton Content="Featured"
+                             Command="{Binding StatisticsViewCommand}"></RadioButton>
+                <RadioButton Content="Settings"
                              Height="50"
                              Foreground="White"
                              FontSize="14"
                              Style="{StaticResource MenuButtonTheme}"></RadioButton>
             </StackPanel>
+
+            <ContentControl Grid.Row="1"
+                            Grid.Column="1"
+                            Margin="20"
+                            Content="{Binding CurrentView}"></ContentControl>
         </Grid>
     </Border>
 </Window>

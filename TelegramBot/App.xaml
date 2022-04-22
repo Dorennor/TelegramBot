@@ -15,8 +15,8 @@
                 <view:HomeView></view:HomeView>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type viewModel:DiscoveryViewModel}">
-                <view:DiscoveryView></view:DiscoveryView>
+            <DataTemplate DataType="{x:Type viewModel:StatisticsViewModel}">
+                <view:StatisticsView></view:StatisticsView>
             </DataTemplate>
         </ResourceDictionary>
     </Application.Resources>

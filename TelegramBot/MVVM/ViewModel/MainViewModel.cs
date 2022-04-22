@@ -4,11 +4,11 @@ namespace DesktopApp.MVVM.ViewModel
 {
     public class MainViewModel : ObservableObject
     {
-        public RelayCommand DiscoveryViewCommand { get; set; }
+        public RelayCommand StatisticsViewCommand { get; set; }
         public RelayCommand HomeViewCommand { get; set; }
 
         public HomeViewModel HomeVM { get; set; }
-        public DiscoveryViewModel DiscoveryVM { get; set; }
+        public StatisticsViewModel StatisticsVM { get; set; }
 
         private object _currentView;
 
@@ -25,7 +25,7 @@ namespace DesktopApp.MVVM.ViewModel
         public MainViewModel()
         {
             HomeVM = new HomeViewModel();
-            DiscoveryVM = new DiscoveryViewModel();
+            StatisticsVM = new StatisticsViewModel();
 
             CurrentView = HomeVM;
 
@@ -33,9 +33,9 @@ namespace DesktopApp.MVVM.ViewModel
             {
                 CurrentView = HomeVM;
             });
-            DiscoveryViewCommand = new RelayCommand(o =>
+            StatisticsViewCommand = new RelayCommand(o =>
             {
-                CurrentView = DiscoveryVM;
+                CurrentView = StatisticsVM;
             });
         }
     }
