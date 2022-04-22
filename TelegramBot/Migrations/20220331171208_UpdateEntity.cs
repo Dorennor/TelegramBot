@@ -2,18 +2,15 @@
 
 #nullable disable
 
-namespace DesktopApp.Migrations
+namespace DesktopApp.Migrations;
+
+public partial class UpdateEntity : Migration
 {
-    public partial class UpdateEntity : Migration
+    protected override void Up(MigrationBuilder migrationBuilder)
     {
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
+    }
 
-        }
-
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-
-        }
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
     }
 }

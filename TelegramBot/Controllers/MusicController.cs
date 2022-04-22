@@ -1,7 +1,6 @@
-﻿namespace DesktopApp.Models.Controllers
+﻿namespace DesktopApp.Controllers
 {
     public class MusicController
     {
-
     }
 }

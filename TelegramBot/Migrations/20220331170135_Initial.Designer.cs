@@ -3,8 +3,8 @@
 
 #nullable disable
 
-using DesktopApp.Models;
-using DesktopApp.Models.Database;
+using DesktopApp.Database;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;

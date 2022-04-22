@@ -1,12 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace DesktopApp.Models.Entities;
+namespace DesktopApp.Entities;
 
 [Index(nameof(FileUniqueId), IsUnique = true)]
 public class Song
 {
+    [NotMapped]
+    private static readonly char delimiter = ';';
+
     [Key]
     public int Key { get; set; }
 
@@ -41,6 +45,36 @@ public class Song
 
     public string? Tags { get; set; }
 
+    public string[]? GetPerformers()
+    {
+        return Performers?.Split(delimiter);
+    }
+
+    public void SetPerformers(string[]? performers)
+    {
+        Performers = string.Join($"{delimiter}", performers);
+    }
+
+    public string[]? GetGenres()
+    {
+        return Genres?.Split(delimiter);
+    }
+
+    public void SetGenres(string[]? genres)
+    {
+        Genres = string.Join($"{delimiter}", genres);
+    }
+
+    public string[]? GetTags()
+    {
+        return Tags?.Split(delimiter);
+    }
+
+    public void SetTags(string[]? tags)
+    {
+        Tags = string.Join($"{delimiter}", tags);
+    }
+
     public Song(string fileId, string fileUniqueId, string fileName, int duration, DateTime addedDateTime, string? title, string? artist, string? album, int? year, int? rating, string? performers, string? genres, string? tags)
     {
         FileId = fileId;
@@ -56,5 +90,22 @@ public class Song
         Performers = performers;
         Genres = genres;
         Tags = tags;
+    }
+
+    public Song(string fileId, string fileUniqueId, string fileName, int duration, DateTime addedDateTime, string? title, string? artist, string? album, int? year, int? rating, string[]? performers, string[]? genres, string[]? tags)
+    {
+        FileId = fileId;
+        FileUniqueId = fileUniqueId;
+        FileName = fileName;
+        Duration = duration;
+        AddedDateTime = addedDateTime;
+        Title = title;
+        Artist = artist;
+        Album = album;
+        Year = year;
+        Rating = rating;
+        SetPerformers(performers);
+        SetGenres(genres);
+        SetTags(tags);
     }
 }

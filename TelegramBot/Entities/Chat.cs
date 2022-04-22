@@ -1,7 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
-namespace DesktopApp.Models.Entities;
+namespace DesktopApp.Entities;
 
 [Index(nameof(ChatId), IsUnique = true)]
 public class Chat
