@@ -1,29 +1,29 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DesktopApp.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Win32;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using DesktopApp.Models.Database;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Extensions.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
-using TelegramBot.Models;
-using Chat = TelegramBot.Models.Chat;
-using File = System.IO.File;
+using Chat = DesktopApp.Models.Entities.Chat;
 
-namespace TelegramBot
+namespace DesktopApp
 {
     public partial class MainWindow : Window
     {
-        private static TelegramBotClient botClient;
+        private static readonly TelegramBotClient botClient = new TelegramBotClient("5262349068:AAHNdyvZ2Hjji7nScbyq9V-c79w39FcTuC4");
         private CancellationTokenSource source;
         private CancellationToken token;
-        private ChatsDbContext _context;
+        private TGBotDbContext _context;
 
         public MainWindow()
         {
@@ -33,13 +33,25 @@ namespace TelegramBot
             StopButton.IsEnabled = false;
             StateLabel.Content = "Disabled";
 
-            botClient = new TelegramBotClient(@"5262349068:AAHNdyvZ2Hjji7nScbyq9V-c79w39FcTuC4");
             source = new CancellationTokenSource();
             token = source.Token;
 
-            _context = new ChatsDbContext();
+            _context = new TGBotDbContext();
             _context.Database.Migrate();
             _context.Chats.Load();
+            BindComboBox();
+        }
+
+        private void BindComboBox()
+        {
+            var chats = _context.Chats;
+            List<string> bindList = new List<string>();
+            foreach (var chat in chats)
+            {
+                bindList.Add(chat.ChatId + (chat.Username != null ? " | " + chat.Username + " | " : " | ") + (chat.FirstName != null ? chat.FirstName + " " : "") + (chat.LastName != null ? chat.LastName : ""));
+            }
+
+            ComboBox.ItemsSource = bindList;
         }
 
         private async void RunButton_OnClick(object sender, RoutedEventArgs e)
@@ -80,57 +92,45 @@ namespace TelegramBot
         private async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
         {
             if (update.Type != UpdateType.Message) return;
-            if (update.Message!.Type != MessageType.Text && update.Message!.Type != MessageType.Audio) return;
+            if (update.Message!.Type != MessageType.Audio) return;
 
-            var file = botClient.GetFileAsync(update.Message.Audio.FileId);
-            var fileName = file.Result.FileId + "." + file.Result.FilePath.Split('.').Last();
+            var message = update.Message;
+            var song = message.Audio;
+            var chat = message.Chat;
 
-            using (var saveAudioStream = File.Open(fileName, FileMode.Create))
+            if (!IsExist(message.Chat.Id))
             {
-                MessageBox.Show(file.Result.FilePath);
-                await botClient.DownloadFileAsync(file.Result.FilePath, saveAudioStream);
-                Thread.Sleep(360);
-            }
-            await botClient.SendTextMessageAsync(update.Message.Chat.Id, "Audio save");
-
-            Debug.WriteLine($"Received a '{update.Message.Text}' message in chat {update.Message.Chat.Id}.");
-
-            if (!IsExist(update.Message.Chat.Id))
-            {
-                await _context.Chats.AddAsync(new Chat(update.Message.Chat.Id, update.Message.Chat.Username, update.Message.Chat.FirstName, update.Message.Chat.LastName));
+                await _context.Chats.AddAsync(new Chat(chat.Id, chat.Username, chat.FirstName, chat.LastName));
                 await _context.SaveChangesAsync();
             }
-
-            //await botClient.SendTextMessageAsync(update.Message.Chat.Id, $"ChatID: {update.Message.Chat.Id}\nUsername: {update.Message.Chat.Username}\nFirstName: {update.Message.Chat.FirstName}\nLastName: {update.Message.Chat.LastName}", cancellationToken: cancellationToken);
         }
 
         private Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
         {
-            var ErrorMessage = exception switch
+            var errorMessage = exception switch
             {
                 ApiRequestException apiRequestException
                     => $"Telegram API Error:\n[{apiRequestException.ErrorCode}]\n{apiRequestException.Message}",
                 _ => exception.ToString()
             };
 
-            Debug.WriteLine(ErrorMessage);
+            Debug.WriteLine(errorMessage);
             return Task.CompletedTask;
         }
 
-        private bool IsExist(long ChatId)
+        private bool IsExist(long chatId)
         {
-            var temp = _context.Chats.FirstOrDefault(c => c.ChatId == ChatId);
-            return temp != null;
+            var chat = _context.Chats.FirstOrDefault(c => c.ChatId == chatId);
+            return chat != null;
         }
-
 
         private async void SendMessageButton_OnClick(object sender, RoutedEventArgs e)
         {
             var cancelationToken = new CancellationTokenSource().Token;
-            for (int i = 1; i < 11; i++)
+            if (ComboBox.SelectedItem != null)
             {
-                await botClient.SendTextMessageAsync(1022035656, $"Слава, отсоси {i} хуёв!", cancellationToken: cancelationToken);
-                Thread.Sleep(60);
+                var chatId = Convert.ToInt64(ComboBox.SelectedItem.ToString()?.Split("|").First());
+                await botClient.SendTextMessageAsync(chatId, $"{_context.Chats.First(u => u.ChatId == chatId).FirstName}, привет!", cancellationToken: cancelationToken);
             }
         }
 

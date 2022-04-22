@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 
-namespace TelegramBot.Models;
+namespace DesktopApp.Models.Entities;
 
 [Index(nameof(ChatId), IsUnique = true)]
 public class Chat
@@ -9,7 +9,9 @@ public class Chat
     [Key]
     public int Id { get; set; }
 
+    [Required]
     public long ChatId { get; set; }
+
     public string? Username { get; set; }
     public string? FirstName { get; set; }
     public string? LastName { get; set; }

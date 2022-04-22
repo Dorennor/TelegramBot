@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace TelegramBot.Migrations
+namespace DesktopApp.Migrations
 {
     public partial class UpdateEntity : Migration
     {

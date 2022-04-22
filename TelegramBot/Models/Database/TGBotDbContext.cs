@@ -1,11 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DesktopApp.Models.Entities;
+using Microsoft.EntityFrameworkCore;
 
-namespace TelegramBot.Models;
+namespace DesktopApp.Models.Database;
 
-public class ChatsDbContext : DbContext
+public class TGBotDbContext : DbContext
 {
-    private readonly string _connectionString = @"Server=VLADIMIRPC;Database=ChatDb;Trusted_Connection=True";
+    private readonly string _connectionString = @"Server=VLADIMIRPC;Database=TGBotDb;Trusted_Connection=True";
     public DbSet<Chat> Chats { get; set; }
+    public DbSet<Song> Songs { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -16,8 +18,5 @@ public class ChatsDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-        builder.Entity<Chat>()
-            .HasIndex(c => c.ChatId)
-            .IsUnique();
     }
 }
