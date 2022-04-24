@@ -1,5 +1,5 @@
 ﻿using DesktopApp.Database;
-using Microsoft.Win32;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Diagnostics;
 using System.Linq;
@@ -27,10 +27,12 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
 
-        StateLabel.Content = "Disabled";
-
         source = new CancellationTokenSource();
         token = source.Token;
+
+        _context = new TGBotDbContext();
+        _context.Database.Migrate();
+        _context.Chats.Load();
     }
 
     private async void RunButton_OnClick(object sender, RoutedEventArgs e)
@@ -67,7 +69,7 @@ public partial class MainWindow : Window
     private async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
     {
         if (update.Type != UpdateType.Message) return;
-        if (update.Message!.Type != MessageType.Audio) return;
+        if (update.Message!.Type != MessageType.Text && update.Message!.Type != MessageType.Audio) return;
 
         var message = update.Message;
         var song = message.Audio;

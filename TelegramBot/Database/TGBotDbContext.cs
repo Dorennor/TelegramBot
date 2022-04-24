@@ -5,15 +5,14 @@ namespace DesktopApp.Database;
 
 public class TGBotDbContext : DbContext
 {
-    //private static readonly string _localDb = @"Server=(localdb)\MSSQLLocalDB;Integrated Security=true";
-    private static readonly string _serverDb = @"Server=VLADIMIRPC;Database=TGBotDb;Trusted_Connection=True";
+    private static readonly string _sqlite = @"Data Source=.\TGBotDb.db";
 
     public DbSet<Chat> Chats { get; set; }
     public DbSet<Song> Songs { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlServer(_serverDb);
+        optionsBuilder.UseSqlite(_sqlite);
         base.OnConfiguring(optionsBuilder);
     }
 

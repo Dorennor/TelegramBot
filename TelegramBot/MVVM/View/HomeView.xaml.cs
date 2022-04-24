@@ -54,7 +54,9 @@ public partial class HomeView : UserControl
                 var chatId = Convert.ToInt64(ComboBox.SelectedItem.ToString()?.Split("|").First());
                 await botClient.SendTextMessageAsync(chatId, SendTextTextBox.Text, cancellationToken: cancelationToken);
                 SendTextTextBox.Text = string.Empty;
+                
             }
         }
+        BindComboBox();
     }
 }
