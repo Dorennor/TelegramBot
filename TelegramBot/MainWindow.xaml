@@ -10,7 +10,8 @@
         ResizeMode="NoResize"
         Background="Transparent"
         AllowsTransparency="True"
-        MouseLeftButtonDown="MainWindow_OnMouseLeftButtonDown">
+        MouseLeftButtonDown="MainWindow_OnMouseLeftButtonDown"
+        FontFamily="/Fonts/#Poppins">
 
     <Window.DataContext>
         <viewModel:MainViewModel></viewModel:MainViewModel>
@@ -43,7 +44,6 @@
                         Width="50"
                         Background="Transparent"
                         BorderBrush="White"
-                        FontFamily="/Fonts/#Poppins"
                         Foreground="White"
                         Margin="10">
 
@@ -59,7 +59,6 @@
                         Width="50"
                         Background="Transparent"
                         BorderBrush="White"
-                        FontFamily="/Fonts/#Poppins"
                         Foreground="White"
                         Margin="10">
                     <Button.Resources>
@@ -82,9 +81,9 @@
                        VerticalContentAlignment="Center"
                        Grid.Column="0"
                        Margin="20"
+                       FontSize="16"
                        BorderBrush="White"
                        BorderThickness="1"
-                       FontFamily="/Fonts/#Poppins"
                        Foreground="White">
                     <Label.Resources>
                         <Style TargetType="{x:Type Border}">
@@ -100,7 +99,7 @@
                             Margin="10">
 
                     <Button Name="Minimize"
-                            Content="-"
+                            Content="—"
                             Click="Minimize_OnClick"
                             VerticalAlignment="Top"
                             HorizontalAlignment="Right"
@@ -110,12 +109,13 @@
                             BorderBrush="Transparent"
                             FontSize="16"
                             Foreground="White"
+                            FontFamily="Segoe UI"
                             FontWeight="Bold"
                             Margin="0,0,5,0">
                     </Button>
 
                     <Button Name="Exit"
-                            Content="x"
+                            Content="X"
                             Click="ExitButton_OnClick"
                             VerticalAlignment="Top"
                             HorizontalAlignment="Right"
@@ -125,7 +125,8 @@
                             BorderBrush="Transparent"
                             FontSize="16"
                             Foreground="White"
-                            FontWeight="Bold"
+                            FontFamily="Segoe UI"
+
                             Margin="5,0,0,0" />
                 </StackPanel>
             </Grid>
@@ -133,20 +134,17 @@
             <StackPanel Grid.Row="1" Grid.Column="0">
                 <RadioButton Content="Home"
                              Height="50"
-                             Foreground="White"
                              FontSize="14"
                              Style="{StaticResource MenuButtonTheme}"
                              IsChecked="True"
                              Command="{Binding HomeViewCommand}"></RadioButton>
                 <RadioButton Content="Statistics"
                              Height="50"
-                             Foreground="White"
                              FontSize="14"
                              Style="{StaticResource MenuButtonTheme}"
                              Command="{Binding StatisticsViewCommand}"></RadioButton>
                 <RadioButton Content="Settings"
                              Height="50"
-                             Foreground="White"
                              FontSize="14"
                              Style="{StaticResource MenuButtonTheme}"></RadioButton>
             </StackPanel>

@@ -1,5 +1,4 @@
 ﻿using DesktopApp.Database;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Win32;
 using System;
 using System.Diagnostics;
@@ -8,7 +7,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Extensions.Polling;
@@ -29,36 +27,15 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
 
-        //RunButton.IsEnabled = true;
-        //StopButton.IsEnabled = false;
         StateLabel.Content = "Disabled";
 
         source = new CancellationTokenSource();
         token = source.Token;
-
-        _context = new TGBotDbContext();
-        _context.Database.Migrate();
-        _context.Chats.Load();
-        //BindComboBox();
     }
-
-    //private void BindComboBox()
-    //{
-    //    var chats = _context.Chats;
-    //    List<string> bindList = new List<string>();
-    //    foreach (var chat in chats)
-    //    {
-    //        bindList.Add(chat.ChatId + (chat.Username != null ? " | " + chat.Username + " | " : " | ") + (chat.FirstName != null ? chat.FirstName + " " : "") + (chat.LastName != null ? chat.LastName : ""));
-    //    }
-
-    //    ComboBox.ItemsSource = bindList;
-    //}
 
     private async void RunButton_OnClick(object sender, RoutedEventArgs e)
     {
         StateLabel.Content = "Enabled";
-        //RunButton.IsEnabled = false;
-        //StopButton.IsEnabled = true;
 
         var receiverOptions = new ReceiverOptions
         {
@@ -75,8 +52,6 @@ public partial class MainWindow : Window
     private async void StopButton_OnClick(object sender, RoutedEventArgs e)
     {
         StateLabel.Content = "Disabled";
-        //RunButton.IsEnabled = true;
-        //StopButton.IsEnabled = false;
 
         source.Cancel();
         source.Dispose();
@@ -122,27 +97,6 @@ public partial class MainWindow : Window
     {
         var chat = _context.Chats.FirstOrDefault(c => c.ChatId == chatId);
         return chat != null;
-    }
-
-    //private async void SendMessageButton_OnClick(object sender, RoutedEventArgs e)
-    //{
-    //    var cancelationToken = new CancellationTokenSource().Token;
-    //    if (ComboBox.SelectedItem != null)
-    //    {
-    //        var chatId = Convert.ToInt64(ComboBox.SelectedItem.ToString()?.Split("|").First());
-    //        await botClient.SendTextMessageAsync(chatId, $"{_context.Chats.First(u => u.ChatId == chatId).FirstName}, привет!", cancellationToken: cancelationToken);
-    //    }
-    //}
-
-    private void OpenFileButton_OnClick(object sender, RoutedEventArgs e)
-    {
-        OpenFileDialog openFileDialog = new OpenFileDialog();
-        if (openFileDialog.ShowDialog() == false) return;
-
-        var tfile = TagLib.File.Create(openFileDialog.FileName);
-        string title = tfile.Tag.Title;
-        TimeSpan duration = tfile.Properties.Duration;
-        Debug.WriteLine($"Title: {title}, duration: {duration}");
     }
 
     private void ExitButton_OnClick(object sender, RoutedEventArgs e)

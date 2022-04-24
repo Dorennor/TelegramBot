@@ -5,11 +5,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800"
-             Background="#0d0b1c">
+             Background="#0d0b1c"
+             FontFamily="/Fonts/#Poppins">
 
     <Border BorderBrush="White"
             BorderThickness="1"
-            CornerRadius="20">
+            CornerRadius="7">
         <Grid>
             <Image Source="/Images/icon.jpg" Margin="20"></Image>
         </Grid>
