@@ -1,28 +1,23 @@
-﻿using System;
+﻿using DesktopApp.Models;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using DesktopApp.Models;
-using Microsoft.EntityFrameworkCore;
 using Telegram.Bot;
 
 namespace DesktopApp.View;
 
 public partial class HomeView : UserControl
 {
-    private static readonly TelegramBotClient botClient = new TelegramBotClient("5262349068:AAHNdyvZ2Hjji7nScbyq9V-c79w39FcTuC4");
-    private CancellationTokenSource source;
-    private CancellationToken token;
-    private TGBotDbContext _context;
+    private static readonly TelegramBotClient BotClient = new("5262349068:AAHNdyvZ2Hjji7nScbyq9V-c79w39FcTuC4");
+    private readonly TGBotDbContext _context;
 
     public HomeView()
     {
         InitializeComponent();
-
-        source = new CancellationTokenSource();
-        token = source.Token;
 
         _context = new TGBotDbContext();
         _context.Database.Migrate();
@@ -34,10 +29,10 @@ public partial class HomeView : UserControl
     private void BindComboBox()
     {
         var chats = _context.Chats;
-        List<string> bindList = new List<string>();
+        List<string> bindList = new();
         foreach (var chat in chats)
         {
-            bindList.Add(chat.ChatId + (chat.Username != null ? " | " + chat.Username + " | " : " | ") + (chat.FirstName != null ? chat.FirstName + " " : "") + (chat.LastName != null ? chat.LastName : ""));
+            bindList.Add(chat.ChatId + (chat.Username != null ? " | " + chat.Username + " | " : " | ") + (chat.FirstName != null ? chat.FirstName + " " : "") + (chat.LastName ?? ""));
         }
 
         ComboBox.ItemsSource = bindList;
@@ -52,9 +47,8 @@ public partial class HomeView : UserControl
             if (ComboBox.SelectedItem != null)
             {
                 var chatId = Convert.ToInt64(ComboBox.SelectedItem.ToString()?.Split("|").First());
-                await botClient.SendTextMessageAsync(chatId, SendTextTextBox.Text, cancellationToken: cancelationToken);
+                await BotClient.SendTextMessageAsync(chatId, SendTextTextBox.Text, cancellationToken: cancelationToken);
                 SendTextTextBox.Text = string.Empty;
-                
             }
         }
         BindComboBox();

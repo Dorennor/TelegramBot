@@ -15,6 +15,9 @@ public class Song
     public int Key { get; set; }
 
     [Required]
+    public string HashCode { get; set; }
+
+    [Required]
     public string FileId { get; set; }
 
     [Required]
@@ -50,7 +53,7 @@ public class Song
         return Performers?.Split(delimiter);
     }
 
-    public void SetPerformers(string[]? performers)
+    public void SetPerformers(string[] performers)
     {
         Performers = string.Join($"{delimiter}", performers);
     }
@@ -60,7 +63,7 @@ public class Song
         return Genres?.Split(delimiter);
     }
 
-    public void SetGenres(string[]? genres)
+    public void SetGenres(string[] genres)
     {
         Genres = string.Join($"{delimiter}", genres);
     }
@@ -70,12 +73,12 @@ public class Song
         return Tags?.Split(delimiter);
     }
 
-    public void SetTags(string[]? tags)
+    public void SetTags(string[] tags)
     {
         Tags = string.Join($"{delimiter}", tags);
     }
 
-    public Song(string fileId, string fileUniqueId, string fileName, int duration, DateTime addedDateTime, string? title, string? artist, string? album, int? year, int? rating, string? performers, string? genres, string? tags)
+    public Song(string fileId, string fileUniqueId, string fileName, int duration, DateTime addedDateTime, string? title, string? artist, string? album, int? year, int? rating, string? performers, string? genres, string? tags, string hashCode)
     {
         FileId = fileId;
         FileUniqueId = fileUniqueId;
@@ -90,9 +93,10 @@ public class Song
         Performers = performers;
         Genres = genres;
         Tags = tags;
+        HashCode = hashCode;
     }
 
-    public Song(string fileId, string fileUniqueId, string fileName, int duration, DateTime addedDateTime, string? title, string? artist, string? album, int? year, int? rating, string[]? performers, string[]? genres, string[]? tags)
+    public Song(string fileId, string fileUniqueId, string fileName, int duration, DateTime addedDateTime, string? title, string? artist, string? album, int? year, int? rating, string[]? performers, string[]? genres, string[]? tags, string hashCode)
     {
         FileId = fileId;
         FileUniqueId = fileUniqueId;
@@ -104,6 +108,7 @@ public class Song
         Album = album;
         Year = year;
         Rating = rating;
+        HashCode = hashCode;
         SetPerformers(performers);
         SetGenres(genres);
         SetTags(tags);

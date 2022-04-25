@@ -7,7 +7,6 @@
     <UseWPF>true</UseWPF>
     <ApplicationIcon>Resources\Images\icon.ico</ApplicationIcon>
     <StartupObject>DesktopApp.App</StartupObject>
-    <BaseOutputPath></BaseOutputPath>
   </PropertyGroup>
 
   <ItemGroup>

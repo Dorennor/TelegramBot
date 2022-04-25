@@ -3,6 +3,7 @@ using System;
 using DesktopApp.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DesktopApp.Migrations
 {
     [DbContext(typeof(TGBotDbContext))]
-    partial class TGBotDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220425151420_EditedSongEntity")]
+    partial class EditedSongEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.4");

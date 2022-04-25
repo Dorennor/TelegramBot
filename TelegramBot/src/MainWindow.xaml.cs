@@ -1,12 +1,14 @@
-﻿using System;
+﻿using DesktopApp.Models;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using DesktopApp.Models;
-using Microsoft.EntityFrameworkCore;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Extensions.Polling;
@@ -18,21 +20,22 @@ namespace DesktopApp;
 
 public partial class MainWindow : Window
 {
-    private static readonly TelegramBotClient botClient = new TelegramBotClient("5262349068:AAHNdyvZ2Hjji7nScbyq9V-c79w39FcTuC4");
-    private CancellationTokenSource source;
-    private CancellationToken token;
-    private TGBotDbContext _context;
+    private static readonly TelegramBotClient BotClient = new("5262349068:AAHNdyvZ2Hjji7nScbyq9V-c79w39FcTuC4");
+    private CancellationTokenSource _source;
+    private CancellationToken _token;
+    private readonly TGBotDbContext _context;
 
     public MainWindow()
     {
         InitializeComponent();
 
-        source = new CancellationTokenSource();
-        token = source.Token;
+        _source = new CancellationTokenSource();
+        _token = _source.Token;
 
         _context = new TGBotDbContext();
-        _context.Database.Migrate();
-        _context.Chats.Load();
+        _context.Database.MigrateAsync();
+        _context.Chats.LoadAsync();
+        _context.Songs.LoadAsync();
     }
 
     private async void RunButton_OnClick(object sender, RoutedEventArgs e)
@@ -44,9 +47,9 @@ public partial class MainWindow : Window
             AllowedUpdates = { }
         };
 
-        botClient.StartReceiving(HandleUpdateAsync, HandleErrorAsync, receiverOptions, token);
+        BotClient.StartReceiving(HandleUpdateAsync, HandleErrorAsync, receiverOptions, _token);
 
-        var me = await botClient.GetMeAsync();
+        var me = await BotClient.GetMeAsync();
 
         Debug.WriteLine($"Start listening for @{me.Username}");
     }
@@ -55,13 +58,13 @@ public partial class MainWindow : Window
     {
         StateLabel.Content = "Disabled";
 
-        source.Cancel();
-        source.Dispose();
+        _source.Cancel();
+        _source.Dispose();
 
-        source = new CancellationTokenSource();
-        token = source.Token;
+        _source = new CancellationTokenSource();
+        _token = _source.Token;
 
-        var me = await botClient.GetMeAsync();
+        var me = await BotClient.GetMeAsync();
 
         Debug.WriteLine($"Stop listening for @{me.Username}");
     }
@@ -72,14 +75,57 @@ public partial class MainWindow : Window
         if (update.Message!.Type != MessageType.Text && update.Message!.Type != MessageType.Audio) return;
 
         var message = update.Message;
-        var song = message.Audio;
         var chat = message.Chat;
+
+        if (message.Type == MessageType.Audio)
+        {
+            var song = message.Audio;
+            var file = BotClient.GetFileAsync(song.FileId);
+            var fileName = song.FileName;
+
+            CreatePathIfNotExist();
+
+            var filePath = Directory.GetCurrentDirectory() + @"\Downloads\Music\";
+
+            using (var saveAudioStream = new FileStream(filePath + fileName, FileMode.Create, FileAccess.Write))
+            {
+                await BotClient.DownloadFileAsync(file.Result.FilePath!, saveAudioStream);
+                SendMessage(chat.Id, "Audio saved!");
+            }
+
+            using (SHA512 sha512 = SHA512.Create())
+            {
+                await using (var openAudioStream = new FileStream(filePath + fileName, FileMode.Open, FileAccess.Read))
+                {
+                    byte[] hashCode = await sha512.ComputeHashAsync(openAudioStream);
+                    var hashCodeString = BitConverter.ToString(hashCode);
+                    SendMessage(chat.Id, hashCodeString);
+                }
+            }
+        }
 
         if (!IsExist(message.Chat.Id))
         {
             await _context.Chats.AddAsync(new Chat(chat.Id, chat.Username, chat.FirstName, chat.LastName));
             await _context.SaveChangesAsync();
         }
+    }
+
+    private static void CreatePathIfNotExist()
+    {
+        if (!Directory.Exists(@"\Downloads\Music\"))
+        {
+            var filePath = Directory.GetCurrentDirectory();
+            Directory.CreateDirectory("Downloads");
+            Directory.SetCurrentDirectory("Downloads");
+            Directory.CreateDirectory("Music");
+            Directory.SetCurrentDirectory(filePath);
+        }
+    }
+
+    private static async void SendMessage(long id, string message)
+    {
+        await BotClient.SendTextMessageAsync(id, message);
     }
 
     private Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
