@@ -1,4 +1,4 @@
-﻿namespace DesktopApp.Controllers
+﻿namespace DesktopApp.Models
 {
     public class MusicController
     {

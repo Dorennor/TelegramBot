@@ -1,6 +1,6 @@
 ﻿using DesktopApp.Core;
 
-namespace DesktopApp.MVVM.ViewModel
+namespace DesktopApp.ViewModel
 {
     public class MainViewModel : ObservableObject
     {

@@ -1,4 +1,4 @@
-﻿namespace DesktopApp.MVVM.ViewModel;
+﻿namespace DesktopApp.ViewModel;
 
 public class HomeViewModel
 {

@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
-namespace DesktopApp.Entities;
+namespace DesktopApp.Models;
 
 [Index(nameof(FileUniqueId), IsUnique = true)]
 public class Song

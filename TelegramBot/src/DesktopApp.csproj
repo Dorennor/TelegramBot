@@ -5,21 +5,37 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
-    <ApplicationIcon>Images\icon.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\Images\icon.ico</ApplicationIcon>
+    <StartupObject>DesktopApp.App</StartupObject>
+    <BaseOutputPath></BaseOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Images\icon.jpg" />
+    <Compile Remove="Images\**" />
+    <Compile Remove="MVVM\**" />
+    <Compile Remove="src\**" />
+    <Compile Remove="Theme\**" />
+    <EmbeddedResource Remove="Images\**" />
+    <EmbeddedResource Remove="MVVM\**" />
+    <EmbeddedResource Remove="src\**" />
+    <EmbeddedResource Remove="Theme\**" />
+    <None Remove="Images\**" />
+    <None Remove="MVVM\**" />
+    <None Remove="src\**" />
+    <None Remove="Theme\**" />
+    <Page Remove="Images\**" />
+    <Page Remove="MVVM\**" />
+    <Page Remove="src\**" />
+    <Page Remove="Theme\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Images\icon.ico" />
+    <Content Include="Resources\Images\icon.ico" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Data.Sqlite" Version="6.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -28,11 +44,4 @@
     <PackageReference Include="Telegram.Bot" Version="17.0.0" />
     <PackageReference Include="Telegram.Bot.Extensions.Polling" Version="1.0.2" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="Images\icon.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-  </ItemGroup>
-
 </Project>

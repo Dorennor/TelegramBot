@@ -1,18 +1,18 @@
-﻿using DesktopApp.Database;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using DesktopApp.Models;
+using Microsoft.EntityFrameworkCore;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Extensions.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
-using Chat = DesktopApp.Entities.Chat;
+using Chat = DesktopApp.Models.Chat;
 
 namespace DesktopApp;
 

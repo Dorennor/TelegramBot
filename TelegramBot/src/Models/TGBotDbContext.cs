@@ -1,7 +1,6 @@
-﻿using DesktopApp.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
-namespace DesktopApp.Database;
+namespace DesktopApp.Models;
 
 public class TGBotDbContext : DbContext
 {
