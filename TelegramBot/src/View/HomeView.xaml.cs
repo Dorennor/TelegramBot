@@ -13,13 +13,13 @@ namespace DesktopApp.View;
 public partial class HomeView : UserControl
 {
     private static readonly TelegramBotClient BotClient = new("5262349068:AAHNdyvZ2Hjji7nScbyq9V-c79w39FcTuC4");
-    private readonly TGBotDbContext _context;
+    private readonly TgBotDbContext _context;
 
     public HomeView()
     {
         InitializeComponent();
 
-        _context = new TGBotDbContext();
+        _context = new TgBotDbContext();
         _context.Database.Migrate();
         _context.Chats.Load();
 

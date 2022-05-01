@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DesktopApp.Models;
 
-[Index(nameof(FileUniqueId), IsUnique = true)]
+[Index(nameof(FileUniqueId),nameof(HashCode), IsUnique = true)]
 public class Song
 {
     [NotMapped]
@@ -38,7 +38,7 @@ public class Song
 
     public string? Album { get; set; }
 
-    public int? Year { get; set; }
+    public uint? Year { get; set; }
 
     public int? Rating { get; set; }
 
@@ -53,9 +53,9 @@ public class Song
         return Performers?.Split(delimiter);
     }
 
-    public void SetPerformers(string[] performers)
+    public void SetPerformers(string[]? performers)
     {
-        Performers = string.Join($"{delimiter}", performers);
+        if (performers != null) Performers = string.Join($"{delimiter}", performers);
     }
 
     public string[]? GetGenres()
@@ -63,9 +63,9 @@ public class Song
         return Genres?.Split(delimiter);
     }
 
-    public void SetGenres(string[] genres)
+    public void SetGenres(string[]? genres)
     {
-        Genres = string.Join($"{delimiter}", genres);
+        if (genres != null) Genres = string.Join($"{delimiter}", genres);
     }
 
     public string[]? GetTags()
@@ -73,12 +73,12 @@ public class Song
         return Tags?.Split(delimiter);
     }
 
-    public void SetTags(string[] tags)
+    public void SetTags(string[]? tags)
     {
-        Tags = string.Join($"{delimiter}", tags);
+        if (tags != null) Tags = string.Join($"{delimiter}", tags);
     }
 
-    public Song(string fileId, string fileUniqueId, string fileName, int duration, DateTime addedDateTime, string? title, string? artist, string? album, int? year, int? rating, string? performers, string? genres, string? tags, string hashCode)
+    public Song(string fileId, string fileUniqueId, string fileName, int duration, DateTime addedDateTime, string? title, string? artist, string? album, uint? year, int? rating, string? performers, string? genres, string? tags, string hashCode)
     {
         FileId = fileId;
         FileUniqueId = fileUniqueId;
@@ -96,7 +96,7 @@ public class Song
         HashCode = hashCode;
     }
 
-    public Song(string fileId, string fileUniqueId, string fileName, int duration, DateTime addedDateTime, string? title, string? artist, string? album, int? year, int? rating, string[]? performers, string[]? genres, string[]? tags, string hashCode)
+    public Song(string fileId, string fileUniqueId, string fileName, int duration, DateTime addedDateTime, string? title, string? artist, string? album, uint? year, int? rating, string[]? performers, string[]? genres, string[]? tags, string hashCode)
     {
         FileId = fileId;
         FileUniqueId = fileUniqueId;

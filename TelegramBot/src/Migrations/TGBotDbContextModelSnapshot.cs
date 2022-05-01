@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DesktopApp.Migrations
 {
-    [DbContext(typeof(TGBotDbContext))]
+    [DbContext(typeof(TgBotDbContext))]
     partial class TGBotDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
@@ -97,7 +97,7 @@ namespace DesktopApp.Migrations
 
                     b.HasKey("Key");
 
-                    b.HasIndex("FileUniqueId")
+                    b.HasIndex("FileUniqueId", "HashCode")
                         .IsUnique();
 
                     b.ToTable("Songs");

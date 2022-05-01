@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DesktopApp.Migrations
 {
-    [DbContext(typeof(TGBotDbContext))]
+    [DbContext(typeof(TgBotDbContext))]
     [Migration("20220424151406_InitialSQLite")]
     partial class InitialSQLite
     {

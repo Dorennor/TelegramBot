@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace DesktopApp.Models;
 
-public class TGBotDbContext : DbContext
+public class TgBotDbContext : DbContext
 {
     private static readonly string _sqlite = @"Data Source=.\TGBotDb.db";
 
@@ -18,5 +19,17 @@ public class TGBotDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
+    }
+
+    public bool IsChatExist(long chatId)
+    {
+        var chat = Chats.FirstOrDefault(c => c.ChatId == chatId);
+        return chat != null;
+    }
+
+    public bool IsSongExist(string hashCode)
+    {
+        var song = Songs.FirstOrDefault(s => s.HashCode == hashCode);
+        return song != null;
     }
 }

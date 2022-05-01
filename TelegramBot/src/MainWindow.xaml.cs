@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,10 +19,10 @@ namespace DesktopApp;
 
 public partial class MainWindow : Window
 {
-    private static readonly TelegramBotClient BotClient = new("5262349068:AAHNdyvZ2Hjji7nScbyq9V-c79w39FcTuC4");
+    private static readonly TelegramBotClient BotClient = new("5324310799:AAEH9YQlB4asYeLe0Dr2O1j0XOdlSgZyJHM");
     private CancellationTokenSource _source;
     private CancellationToken _token;
-    private readonly TGBotDbContext _context;
+    private readonly TgBotDbContext _context;
 
     public MainWindow()
     {
@@ -32,7 +31,7 @@ public partial class MainWindow : Window
         _source = new CancellationTokenSource();
         _token = _source.Token;
 
-        _context = new TGBotDbContext();
+        _context = new TgBotDbContext();
         _context.Database.MigrateAsync();
         _context.Chats.LoadAsync();
         _context.Songs.LoadAsync();
@@ -77,6 +76,12 @@ public partial class MainWindow : Window
         var message = update.Message;
         var chat = message.Chat;
 
+        if (!_context.IsChatExist(message.Chat.Id))
+        {
+            await _context.Chats.AddAsync(new Chat(chat.Id, chat.Username, chat.FirstName, chat.LastName));
+            await _context.SaveChangesAsync();
+        }
+
         if (message.Type == MessageType.Audio)
         {
             var song = message.Audio;
@@ -90,24 +95,25 @@ public partial class MainWindow : Window
             using (var saveAudioStream = new FileStream(filePath + fileName, FileMode.Create, FileAccess.Write))
             {
                 await BotClient.DownloadFileAsync(file.Result.FilePath!, saveAudioStream);
-                SendMessage(chat.Id, "Audio saved!");
+                await BotClient.SendTextMessageAsync(chat.Id, "Audio saved!");
             }
 
-            using (SHA512 sha512 = SHA512.Create())
-            {
-                await using (var openAudioStream = new FileStream(filePath + fileName, FileMode.Open, FileAccess.Read))
-                {
-                    byte[] hashCode = await sha512.ComputeHashAsync(openAudioStream);
-                    var hashCodeString = BitConverter.ToString(hashCode);
-                    SendMessage(chat.Id, hashCodeString);
-                }
-            }
-        }
+            var songTags = TagLib.File.Create(filePath + fileName).Tag;
 
-        if (!IsExist(message.Chat.Id))
-        {
-            await _context.Chats.AddAsync(new Chat(chat.Id, chat.Username, chat.FirstName, chat.LastName));
+            await _context.Songs.AddAsync(new Song(song.FileId, song.FileUniqueId, song.FileName, song.Duration, DateTime.Now, song.Title, songTags.FirstAlbumArtist, songTags.Album, songTags.Year, null, songTags.Performers, songTags.Genres, null, GenerateHashCode(filePath, fileName).Result));
             await _context.SaveChangesAsync();
+        }
+    }
+
+    private async Task<string> GenerateHashCode(string filePath, string fileName)
+    {
+        using (SHA512 sha512 = SHA512.Create())
+        {
+            using (var openAudioStream = new FileStream(filePath + fileName, FileMode.Open, FileAccess.Read))
+            {
+                byte[] hashCode = await sha512.ComputeHashAsync(openAudioStream);
+                return BitConverter.ToString(hashCode);
+            }
         }
     }
 
@@ -123,11 +129,6 @@ public partial class MainWindow : Window
         }
     }
 
-    private static async void SendMessage(long id, string message)
-    {
-        await BotClient.SendTextMessageAsync(id, message);
-    }
-
     private Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
     {
         var errorMessage = exception switch
@@ -139,12 +140,6 @@ public partial class MainWindow : Window
 
         Debug.WriteLine(errorMessage);
         return Task.CompletedTask;
-    }
-
-    private bool IsExist(long chatId)
-    {
-        var chat = _context.Chats.FirstOrDefault(c => c.ChatId == chatId);
-        return chat != null;
     }
 
     private void ExitButton_OnClick(object sender, RoutedEventArgs e)
