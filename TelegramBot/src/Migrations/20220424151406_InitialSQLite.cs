@@ -1,7 +1,7 @@
 ﻿#nullable disable
 
-using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using System;
 
 namespace DesktopApp.Migrations;
 
@@ -11,8 +11,7 @@ public partial class InitialSQLite : Migration
     {
         migrationBuilder.CreateTable(
             name: "Chats",
-            columns: table => new
-            {
+            columns: table => new {
                 Id = table.Column<int>(type: "INTEGER", nullable: false)
                     .Annotation("Sqlite:Autoincrement", true),
                 ChatId = table.Column<long>(type: "INTEGER", nullable: false),
@@ -27,8 +26,7 @@ public partial class InitialSQLite : Migration
 
         migrationBuilder.CreateTable(
             name: "Songs",
-            columns: table => new
-            {
+            columns: table => new {
                 Key = table.Column<int>(type: "INTEGER", nullable: false)
                     .Annotation("Sqlite:Autoincrement", true),
                 FileId = table.Column<string>(type: "TEXT", nullable: false),

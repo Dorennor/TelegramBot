@@ -1,10 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
-namespace DesktopApp.Models;
+namespace DesktopApp.Models.Entities;
 
 [Index(nameof(ChatId), IsUnique = true)]
-public class Chat
+public class User
 {
     [Key]
     public int Id { get; set; }
@@ -16,7 +16,7 @@ public class Chat
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
 
-    public Chat(long chatId, string? username, string? firstName, string? lastName)
+    public User(long chatId, string? username, string? firstName, string? lastName)
     {
         ChatId = chatId;
         Username = username;

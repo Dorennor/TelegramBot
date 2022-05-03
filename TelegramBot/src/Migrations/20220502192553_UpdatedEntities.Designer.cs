@@ -3,9 +3,8 @@
 
 #nullable disable
 
-using System;
-using DesktopApp.Models;
 using DesktopApp.Models.Data;
+using System;
 using DesktopApp.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -14,41 +13,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DesktopApp.Migrations
 {
     [DbContext(typeof(TgBotDbContext))]
-    [Migration("20220425151420_EditedSongEntity")]
-    partial class EditedSongEntity
+    [Migration("20220502192553_UpdatedEntities")]
+    partial class UpdatedEntities
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.4");
 
-            modelBuilder.Entity("DesktopApp.Models.Chat", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<long>("ChatId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("FirstName")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("LastName")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Username")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ChatId")
-                        .IsUnique();
-
-                    b.ToTable("Chats");
-                });
-
-            modelBuilder.Entity("DesktopApp.Models.Song", b =>
+            modelBuilder.Entity("DesktopApp.Models.Entities.Song", b =>
                 {
                     b.Property<int>("Key")
                         .ValueGeneratedOnAdd()
@@ -97,15 +70,41 @@ namespace DesktopApp.Migrations
                     b.Property<string>("Title")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("Year")
+                    b.Property<uint?>("Year")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Key");
 
-                    b.HasIndex("FileUniqueId")
+                    b.HasIndex("FileUniqueId", "HashCode")
                         .IsUnique();
 
                     b.ToTable("Songs");
+                });
+
+            modelBuilder.Entity("DesktopApp.Models.Entities.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("ChatId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Username")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChatId")
+                        .IsUnique();
+
+                    b.ToTable("Users");
                 });
 #pragma warning restore 612, 618
         }

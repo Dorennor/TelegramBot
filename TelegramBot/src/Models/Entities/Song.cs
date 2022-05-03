@@ -1,15 +1,15 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
-namespace DesktopApp.Models;
+namespace DesktopApp.Models.Entities;
 
-[Index(nameof(FileUniqueId),nameof(HashCode), IsUnique = true)]
+[Index(nameof(FileUniqueId), nameof(HashCode), IsUnique = true)]
 public class Song
 {
     [NotMapped]
-    private static readonly char delimiter = ';';
+    private readonly static char delimiter = ';';
 
     [Key]
     public int Key { get; set; }

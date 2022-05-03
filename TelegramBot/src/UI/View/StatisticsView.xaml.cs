@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace DesktopApp.View;
+namespace DesktopApp.UI.View;
 
 public partial class StatisticsView : UserControl
 {

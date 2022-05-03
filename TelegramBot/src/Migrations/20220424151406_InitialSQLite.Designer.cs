@@ -4,6 +4,8 @@
 
 using System;
 using DesktopApp.Models;
+using DesktopApp.Models.Data;
+using DesktopApp.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;

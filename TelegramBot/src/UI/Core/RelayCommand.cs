@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace DesktopApp.Core;
+namespace DesktopApp.UI.Core;
 
 public class RelayCommand : ICommand
 {
+#pragma warning disable
+
     private Action<object> _execute;
     private Func<object, bool> _canExecute;
 
-    public event EventHandler CanExecuteChanged
-    {
+    public event EventHandler CanExecuteChanged {
         add => CommandManager.RequerySuggested += value;
         remove => CommandManager.RequerySuggested -= value;
     }
@@ -22,6 +23,7 @@ public class RelayCommand : ICommand
 
     public bool CanExecute(object parameter)
     {
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
         return _canExecute == null || _canExecute(parameter);
     }
 
@@ -29,4 +31,6 @@ public class RelayCommand : ICommand
     {
         _execute(parameter);
     }
+
+#pragma warning restore
 }
