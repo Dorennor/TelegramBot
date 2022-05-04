@@ -47,10 +47,11 @@ public class SongsController : IDisposable
         Directory.SetCurrentDirectory(filePath);
     }
 
-    public async Task AddToDbIfDoesNotExist(Audio song)
+    public async Task<bool> AddToDbIfDoesNotExist(Audio song)
     {
-        var file = _botController.BotClient.GetFileAsync(song.FileId);
+        if (_context.Songs.FirstOrDefault(s => s.FileUniqueId == song.FileUniqueId) != null) return false;
 
+        var file = _botController.BotClient.GetFileAsync(song.FileId);
         var fileName = song.FileName;
 
         CreatePathIfNotExist();
@@ -62,16 +63,15 @@ public class SongsController : IDisposable
             await _botController.BotClient.DownloadFileAsync(file.Result.FilePath!, saveAudioStream);
         }
 
+        var songHashCode = GenerateHashCode(filePath, fileName).Result;
+
+        if (_context.Songs.FirstOrDefault(s => s.HashCode == songHashCode) != null) return false;
+
         var songTags = TagLib.File.Create(filePath + fileName).Tag;
 
-        await _context.Songs.AddAsync(new Song(song.FileId, song.FileUniqueId, song.FileName, song.Duration, DateTime.Now, song.Title, songTags.FirstAlbumArtist, songTags.Album, songTags.Year, null, songTags.Performers, songTags.Genres, null, GenerateHashCode(filePath, fileName).Result));
+        await _context.Songs.AddAsync(new Song(song.FileId, song.FileUniqueId, song.FileName, song.Duration, DateTime.Now, song.Title, songTags.FirstAlbumArtist, songTags.Album, songTags.Year, null, songTags.Performers, songTags.Genres, null, songHashCode));
         await _context.SaveChangesAsync();
-    }
-
-    public bool IsSongExist(string hashCode)
-    {
-        var song = _context.Songs.FirstOrDefault(s => s.HashCode == hashCode);
-        return song != null;
+        return true;
     }
 
     public void Dispose()

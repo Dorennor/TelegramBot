@@ -60,10 +60,11 @@ public class BotController
 
             using (var songsController = new SongsController())
             {
-                await songsController.AddToDbIfDoesNotExist(song);
+                if (await songsController.AddToDbIfDoesNotExist(song))
+                {
+                    await BotClient.SendTextMessageAsync(userChat.Id, "Audio saved!");
+                }
             }
-
-            await BotClient.SendTextMessageAsync(userChat.Id, "Audio saved!");
         }
     }
 
