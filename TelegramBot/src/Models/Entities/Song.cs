@@ -8,8 +8,7 @@ namespace DesktopApp.Models.Entities;
 [Index(nameof(FileUniqueId), nameof(HashCode), IsUnique = true)]
 public class Song
 {
-    [NotMapped]
-    private readonly static char delimiter = ';';
+    [NotMapped] private const char delimiter = ';';
 
     [Key]
     public int Key { get; set; }

@@ -12,7 +12,6 @@ public class UserController : IDisposable
 {
     private readonly TgBotDbContext _context;
 
-   
     public UserController()
     {
         _context = new TgBotDbContext();
@@ -28,7 +27,6 @@ public class UserController : IDisposable
         await _context.Users.AddAsync(new User(chat.Id, chat.Username, chat.FirstName, chat.LastName));
         await _context.SaveChangesAsync();
     }
-
 
     public void Dispose()
     {

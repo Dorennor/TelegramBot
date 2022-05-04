@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Telegram.Bot;
@@ -15,11 +16,13 @@ public class BotController
     public TelegramBotClient BotClient { get; } = new("5324310799:AAEH9YQlB4asYeLe0Dr2O1j0XOdlSgZyJHM");
     private CancellationTokenSource _botCancellationTokenSource;
     private CancellationToken _botCancellationToken;
+    private Random random;
 
     public BotController()
     {
         _botCancellationTokenSource = new CancellationTokenSource();
         _botCancellationToken = _botCancellationTokenSource.Token;
+        random = new Random();
     }
 
     public void RunBot()
@@ -48,6 +51,17 @@ public class BotController
 
         var lastHandledMessage = update.Message;
         var userChat = lastHandledMessage.Chat;
+
+        
+        if (lastHandledMessage.Text == @"/GetSong")
+        {
+            using (var songController = new SongsController())
+            {
+                var temp = random.Next(1, songController.Context.Songs.Count());
+                await BotClient.SendAudioAsync(userChat.Id, songController.Context.Songs.FirstOrDefault(k => k.Key == temp).FileId);
+            }
+            return;
+        }
 
         using (var userController = new UserController())
         {
