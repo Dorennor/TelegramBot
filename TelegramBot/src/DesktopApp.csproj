@@ -55,7 +55,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\Test\" />
     <Folder Include="UI\Resources\Strings\" />
   </ItemGroup>
 
@@ -63,5 +62,11 @@
     <ApplicationDefinition Update="App.xaml">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </ApplicationDefinition>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

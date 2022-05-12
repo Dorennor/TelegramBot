@@ -1,6 +1,6 @@
 ﻿//namespace DesktopApp.Models.Test;
 
-//public class Test
+//public class Temp
 //{
 //if (update.Type == UpdateType.InlineQuery)
 //{
