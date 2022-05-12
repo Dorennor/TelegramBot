@@ -3,6 +3,7 @@ using System;
 using DesktopApp.Models.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DesktopApp.Migrations
 {
     [DbContext(typeof(TgBotDbContext))]
-    partial class TgBotDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220510231750_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.4");
@@ -74,7 +76,7 @@ namespace DesktopApp.Migrations
                     b.HasIndex("FileUniqueId", "HashCode")
                         .IsUnique();
 
-                    b.ToTable("Songs", (string)null);
+                    b.ToTable("Songs");
                 });
 
             modelBuilder.Entity("DesktopApp.Models.Entities.User", b =>
@@ -100,7 +102,7 @@ namespace DesktopApp.Migrations
                     b.HasIndex("ChatId")
                         .IsUnique();
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 #pragma warning restore 612, 618
         }

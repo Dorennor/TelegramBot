@@ -57,6 +57,7 @@
                         Content="Stop"
                         Click="StopButton_OnClick"
                         Width="50"
+                        IsEnabled="false"
                         Background="Transparent"
                         BorderBrush="White"
                         Foreground="White"
@@ -77,7 +78,7 @@
                 </Grid.ColumnDefinitions>
 
                 <Label Name="StateLabel"
-                       Content="Disabled"
+                       Content="Bot Stopped"
                        HorizontalContentAlignment="Center"
                        VerticalContentAlignment="Center"
                        Grid.Column="0"

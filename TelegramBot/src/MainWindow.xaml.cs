@@ -1,4 +1,4 @@
-﻿using DesktopApp.Models.Controllers;
+﻿using DesktopApp.Models.Services;
 using System.Windows;
 using System.Windows.Input;
 
@@ -6,24 +6,30 @@ namespace DesktopApp;
 
 public partial class MainWindow : Window
 {
-    private readonly BotController _botController;
+    private readonly IBotService _botService;
+   
 
-    public MainWindow()
+    public MainWindow(IBotService botService)
     {
         InitializeComponent();
-        _botController = new BotController();
+
+        _botService = botService;
     }
 
     private void RunButton_OnClick(object sender, RoutedEventArgs e)
     {
-        StateLabel.Content = "Enabled";
-        _botController.RunBot();
+        _botService.RunBot();
+        StopButton.IsEnabled = true;
+        RunButton.IsEnabled = false;
+        StateLabel.Content = "Bot Runned";
     }
 
     private void StopButton_OnClick(object sender, RoutedEventArgs e)
     {
-        StateLabel.Content = "Disabled";
-        _botController.StopBot();
+        _botService.StopBot();
+        StopButton.IsEnabled = false;
+        RunButton.IsEnabled = true;
+        StateLabel.Content = "Bot Stopped";
     }
 
     private void ExitButton_OnClick(object sender, RoutedEventArgs e)

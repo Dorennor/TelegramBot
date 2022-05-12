@@ -1,15 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DesktopApp.Models.Entities;
 
 [Index(nameof(FileUniqueId), nameof(HashCode), IsUnique = true)]
 public class Song
 {
-    [NotMapped] private const char delimiter = ';';
-
     [Key]
     public int Key { get; set; }
 
@@ -41,44 +39,15 @@ public class Song
 
     public int? Rating { get; set; }
 
-    public string? Performers { get; set; }
+    public string[]? Performers { get; set; }
 
-    public string? Genres { get; set; }
+    public string[]? Genres { get; set; }
 
-    public string? Tags { get; set; }
+    public string[]? Tags { get; set; }
 
-    public string[]? GetPerformers()
+    public Song(string hashCode, string fileId, string fileUniqueId, string fileName, int duration, DateTime addedDateTime, string? title, string? artist, string? album, uint? year, int? rating, string[]? performers, string[]? genres, string[]? tags)
     {
-        return Performers?.Split(delimiter);
-    }
-
-    public void SetPerformers(string[]? performers)
-    {
-        if (performers != null) Performers = string.Join($"{delimiter}", performers);
-    }
-
-    public string[]? GetGenres()
-    {
-        return Genres?.Split(delimiter);
-    }
-
-    public void SetGenres(string[]? genres)
-    {
-        if (genres != null) Genres = string.Join($"{delimiter}", genres);
-    }
-
-    public string[]? GetTags()
-    {
-        return Tags?.Split(delimiter);
-    }
-
-    public void SetTags(string[]? tags)
-    {
-        if (tags != null) Tags = string.Join($"{delimiter}", tags);
-    }
-
-    public Song(string fileId, string fileUniqueId, string fileName, int duration, DateTime addedDateTime, string? title, string? artist, string? album, uint? year, int? rating, string? performers, string? genres, string? tags, string hashCode)
-    {
+        HashCode = hashCode;
         FileId = fileId;
         FileUniqueId = fileUniqueId;
         FileName = fileName;
@@ -92,24 +61,5 @@ public class Song
         Performers = performers;
         Genres = genres;
         Tags = tags;
-        HashCode = hashCode;
-    }
-
-    public Song(string fileId, string fileUniqueId, string fileName, int duration, DateTime addedDateTime, string? title, string? artist, string? album, uint? year, int? rating, string[]? performers, string[]? genres, string[]? tags, string hashCode)
-    {
-        FileId = fileId;
-        FileUniqueId = fileUniqueId;
-        FileName = fileName;
-        Duration = duration;
-        AddedDateTime = addedDateTime;
-        Title = title;
-        Artist = artist;
-        Album = album;
-        Year = year;
-        Rating = rating;
-        HashCode = hashCode;
-        SetPerformers(performers);
-        SetGenres(genres);
-        SetTags(tags);
     }
 }
